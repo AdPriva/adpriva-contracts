@@ -1,0 +1,31 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.20"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+gas_reports = ["Anchor"]
+
+[profile.ci]
+fuzz = { runs = 10000 }
+verbosity = 4
+gas_reports = ["Anchor"]
+
+[profile.production]
+optimizer = true
+optimizer_runs = 1000000  # Optimize for runtime gas efficiency
+via_ir = true  # Better optimization via IR
+
+[rpc_endpoints]
+base_mainnet = "${BASE_MAINNET_RPC_URL}"
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
+horizen_testnet = "${HORIZEN_TESTNET_RPC_URL}"
+horizen_mainnet = "${HORIZEN_MAINNET_RPC_URL}"
+
+[etherscan]
+base = { key = "${BASESCAN_API_KEY}", url = "https://api.basescan.org/api" }
+base_sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
