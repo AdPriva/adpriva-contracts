@@ -28,7 +28,7 @@ contract DeployBase is Script {
         // Check deployer balance
         uint256 balance = deployer.balance;
         console.log("Deployer balance:", balance);
-        require(balance > 0.001 ether, "Insufficient balance for deployment");
+        require(balance > 0.0003 ether, "Insufficient balance for deployment");
 
         vm.startBroadcast(deployerPrivateKey);
 
@@ -54,4 +54,3 @@ contract DeployBase is Script {
         return anchor;
     }
 }
-
