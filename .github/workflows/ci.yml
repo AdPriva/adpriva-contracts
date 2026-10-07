@@ -1,0 +1,47 @@
+name: CI
+
+# Build and test Anchor.sol on every push and pull request. This repo is the
+# canonical home of the deployed Anchor contract (Horizen 0x7b6A…217); the old
+# AdPriva/contracts duplicate is archived (AdPriva/contracts#21).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Forge version
+        run: forge --version
+
+      - name: Build
+        run: forge build --sizes
+
+      - name: Test (ci profile, 10k fuzz runs)
+        run: forge test -vvv
+
+      - name: Build with production profile
+        env:
+          FOUNDRY_PROFILE: production
+        run: forge build --sizes
